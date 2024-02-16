@@ -1,3 +1,10 @@
+import { Helmet } from "react-helmet-async";
+
 export function SingIn() {
-  return <h1>SingIn</h1>;
+  return (
+    <>
+      <Helmet title="Login" />
+      <h1>SingIn</h1>;
+    </>
+  );
 }
