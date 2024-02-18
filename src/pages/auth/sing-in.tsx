@@ -1,3 +1,6 @@
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@radix-ui/react-label";
 import { Helmet } from "react-helmet-async";
 
 export function SingIn() {
@@ -17,8 +20,13 @@ export function SingIn() {
           </div>
 
           <form action="" className="space-y-4">
-            <div className="space-y2"></div>
-            <button type="submit">Acessar Painel</button>
+            <div className="space-y2">
+              <Label htmlFor="email">Seu e-mail</Label>
+              <Input id="email" type="text" />
+            </div>
+            <Button className="w-full" type="submit">
+              Acessar Painel
+            </Button>
           </form>
         </div>
       </div>
