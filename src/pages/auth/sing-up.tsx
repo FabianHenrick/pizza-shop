@@ -1,6 +1,7 @@
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@radix-ui/react-label";
+import { toast } from "sonner";
 
 import { Helmet } from "react-helmet-async";
 import { useForm } from "react-hook-form";
@@ -23,9 +24,13 @@ export function SingUp() {
     formState: { isSubmitting },
   } = useForm<SingUpForm>();
 
-  async function handleSingUp(data: any) {
-    console.log(data);
-    await new Promise((resolve) => setTimeout(resolve, 2000));
+  async function handleSingUp(data: SingUpForm) {
+    try {
+      console.log(data);
+      await new Promise((resolve) => setTimeout(resolve, 2000));
+    } catch {
+      toast.error("Erro ao cadastrar restaurante.");
+    }
   }
 
   return (
