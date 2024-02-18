@@ -5,7 +5,7 @@ import { toast } from "sonner";
 
 import { Helmet } from "react-helmet-async";
 import { useForm } from "react-hook-form";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { z } from "zod";
 
 const singUpForm = z.object({
@@ -18,6 +18,8 @@ const singUpForm = z.object({
 type SingUpForm = z.infer<typeof singUpForm>;
 
 export function SingUp() {
+  const navigate = useNavigate();
+
   const {
     register,
     handleSubmit,
@@ -28,6 +30,9 @@ export function SingUp() {
     try {
       console.log(data);
       await new Promise((resolve) => setTimeout(resolve, 2000));
+      toast.success("Restaurante cadastrado com sucesso!", {
+        action: { label: "Login", onClick: () => navigate("/sing-in") },
+      });
     } catch {
       toast.error("Erro ao cadastrar restaurante.");
     }
