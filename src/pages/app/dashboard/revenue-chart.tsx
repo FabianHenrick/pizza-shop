@@ -28,18 +28,22 @@ const data = [
 
 export function RevenueChart() {
   return (
-    <div>
-      <Card className="col-span-6">
-        <CardHeader className="flex-row items-center justify-between pb-8">
-          <div className="space-y-1">
-            {" "}
-            <CardTitle className="text-base font-medium ">
-              Receita no período
-            </CardTitle>
-            <CardDescription>Receita diária no periodo</CardDescription>
-          </div>
-        
-      </Card>
-    </div>
+    <Card className="col-span-6">
+      <CardHeader className="flex-row items-center justify-between pb-8">
+        <div className="space-y-1">
+          <CardTitle className="text-base font-medium ">
+            Receita no período
+          </CardTitle>
+          <CardDescription>Receita diária no periodo</CardDescription>
+        </div>
+      </CardHeader>
+      <CardContent>
+        <ResponsiveContainer width="100%" height={240}>
+          <LineChart data={data} style={{ fontSize: 12 }}>
+            <Line type="linear" strokeWidth={2} dataKey="revenue" />
+          </LineChart>
+        </ResponsiveContainer>
+      </CardContent>
+    </Card>
   );
 }
