@@ -7,6 +7,8 @@ import { Toaster } from "sonner";
 import { ThemeProvider } from "./components/theme/theme-provider";
 
 export function App() {
+  // implementation Docker and Bun for api
+
   return (
     <HelmetProvider>
       <ThemeProvider storageKey="pizzashop-theme" defaultTheme="dark">
