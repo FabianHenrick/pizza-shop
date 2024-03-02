@@ -6,6 +6,8 @@ import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { Link } from "react-router-dom";
 import { toast } from "sonner";
+import { useMutation } from "@tanstack/react-query";
+import { singIn } from "@/api/sing-in";
 
 const signInForm = z.object({
   email: z.string().email(),
@@ -20,9 +22,11 @@ export function SingIn() {
     formState: { isSubmitting },
   } = useForm<SingInForm>();
 
+  const { mutateAsync: authenticate } = useMutation({ mutationFn: singIn });
+
   async function handleSingIn(data: any) {
     try {
-      await new Promise((resolve) => setTimeout(resolve, 2000));
+      await authenticate({ email: data.email });
       toast.success("Enviamos um link de autenticação para seu email.", {
         action: { label: "Reenviar.", onClick: () => handleSingIn(data) },
       });

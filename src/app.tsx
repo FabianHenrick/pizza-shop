@@ -9,8 +9,6 @@ import { QueryClientProvider } from "@tanstack/react-query";
 import { queryClient } from "./lib/react-query";
 
 export function App() {
-  // implementation Docker and Bun for api
-
   return (
     <HelmetProvider>
       <ThemeProvider storageKey="pizzashop-theme" defaultTheme="dark">
