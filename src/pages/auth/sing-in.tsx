@@ -4,7 +4,7 @@ import { Label } from "@/components/ui/label";
 import { Helmet } from "react-helmet-async";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
-import { Link } from "react-router-dom";
+import { Link, useSearchParams } from "react-router-dom";
 import { toast } from "sonner";
 import { useMutation } from "@tanstack/react-query";
 import { singIn } from "@/api/sing-in";
@@ -16,11 +16,15 @@ const signInForm = z.object({
 type SingInForm = z.infer<typeof signInForm>;
 
 export function SingIn() {
+  const [searchParams] = useSearchParams();
+
   const {
     register,
     handleSubmit,
     formState: { isSubmitting },
-  } = useForm<SingInForm>();
+  } = useForm<SingInForm>({
+    defaultValues: { email: searchParams.get("email") ?? "" },
+  });
 
   const { mutateAsync: authenticate } = useMutation({ mutationFn: singIn });
 
