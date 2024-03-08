@@ -1,4 +1,4 @@
-import { useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery } from "@tanstack/react-query";
 import { Button } from "./button";
 import {
   DialogContent,
@@ -14,6 +14,8 @@ import { getManagedRestaurant } from "@/api/get-managed-restaurant";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { updateProfile } from "@/api/update-profile";
+import { toast } from "sonner";
 
 const storeProfileSchema = z.object({
   name: z.string().min(1),
@@ -28,13 +30,34 @@ export function StoreProfileDialog() {
     queryFn: getManagedRestaurant,
   });
 
-  const { register, handleSubmit } = useForm<StoreProfileSchema>({
+  const {
+    register,
+    handleSubmit,
+    formState: { isSubmitting },
+  } = useForm<StoreProfileSchema>({
     resolver: zodResolver(storeProfileSchema),
     values: {
       name: managedRestaurant?.name ?? "",
       description: managedRestaurant?.description ?? "",
     },
   });
+
+  const { mutateAsync: updateProfielFn } = useMutation({
+    mutationFn: updateProfile,
+  });
+
+  async function handleUpdateProfile(data: StoreProfileSchema) {
+    try {
+      await updateProfielFn({
+        name: data.name,
+        description: data.description,
+      });
+
+      toast.success("Perfil atualizado com sucesso!");
+    } catch {
+      toast.error("Falha ao atualizar o perfil, tente novamente!");
+    }
+  }
 
   return (
     <DialogContent>
@@ -45,7 +68,7 @@ export function StoreProfileDialog() {
           Atualize as informações do seu estabelecimento visiveis ao seu cliente
         </DialogDescription>
       </DialogHeader>{" "}
-      <form>
+      <form onSubmit={handleSubmit(handleUpdateProfile)}>
         <div className="space-y-4 py-4">
           <div className=" grid grid-cols-4  items-center gap-4">
             <Label className="text-right" htmlFor="name">
@@ -74,7 +97,12 @@ export function StoreProfileDialog() {
           <Button variant={"ghost"} type="button">
             Cancelar
           </Button>
-          <Button type="submit" variant={"success"}>
+          <Button
+            type="submit"
+            variant={"success"}
+            {...handleSubmit}
+            disabled={isSubmitting}
+          >
             Salvar
           </Button>
         </DialogFooter>
