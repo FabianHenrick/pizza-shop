@@ -1,6 +1,7 @@
-import { useMutation, useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { Button } from "./button";
 import {
+  DialogClose,
   DialogContent,
   DialogDescription,
   DialogFooter,
@@ -10,7 +11,10 @@ import {
 import { Input } from "./input";
 import { Label } from "./label";
 import { Textarea } from "./textarea";
-import { getManagedRestaurant } from "@/api/get-managed-restaurant";
+import {
+  GetManagedRestaurantResponse,
+  getManagedRestaurant,
+} from "@/api/get-managed-restaurant";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -25,9 +29,12 @@ const storeProfileSchema = z.object({
 type StoreProfileSchema = z.infer<typeof storeProfileSchema>;
 
 export function StoreProfileDialog() {
+  const queryClient = useQueryClient();
+
   const { data: managedRestaurant } = useQuery({
     queryKey: ["managed-restaurant"],
     queryFn: getManagedRestaurant,
+    staleTime: Infinity,
   });
 
   const {
@@ -44,6 +51,21 @@ export function StoreProfileDialog() {
 
   const { mutateAsync: updateProfielFn } = useMutation({
     mutationFn: updateProfile,
+    onSuccess(_, { name, description }) {
+      const cashed = queryClient.getQueryData<GetManagedRestaurantResponse>([
+        `managed-restaurant`,
+      ]);
+      if (cashed) {
+        queryClient.setQueryData<GetManagedRestaurantResponse>(
+          [`managed-restaurant`],
+          {
+            ...cashed,
+            name,
+            description,
+          },
+        );
+      }
+    },
   });
 
   async function handleUpdateProfile(data: StoreProfileSchema) {
@@ -94,9 +116,11 @@ export function StoreProfileDialog() {
         </div>
 
         <DialogFooter>
-          <Button variant={"ghost"} type="button">
-            Cancelar
-          </Button>
+          <DialogClose>
+            <Button variant={"ghost"} type="button">
+              Cancelar
+            </Button>
+          </DialogClose>
           <Button
             type="submit"
             variant={"success"}
