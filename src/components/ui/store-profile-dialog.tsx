@@ -23,7 +23,7 @@ import { toast } from "sonner";
 
 const storeProfileSchema = z.object({
   name: z.string().min(1),
-  description: z.string(),
+  description: z.string().nullable(),
 });
 
 type StoreProfileSchema = z.infer<typeof storeProfileSchema>;
@@ -49,21 +49,36 @@ export function StoreProfileDialog() {
     },
   });
 
+  function updateManagedRestaurantCache({
+    name,
+    description,
+  }: StoreProfileSchema) {
+    const cached = queryClient.getQueryData<GetManagedRestaurantResponse>([
+      `managed-restaurant`,
+    ]);
+    if (cached) {
+      queryClient.setQueryData<GetManagedRestaurantResponse>(
+        [`managed-restaurant`],
+        {
+          ...cached,
+          name,
+          description,
+        },
+      );
+    }
+    return { cached };
+  }
+
   const { mutateAsync: updateProfielFn } = useMutation({
     mutationFn: updateProfile,
-    onSuccess(_, { name, description }) {
-      const cashed = queryClient.getQueryData<GetManagedRestaurantResponse>([
-        `managed-restaurant`,
-      ]);
-      if (cashed) {
-        queryClient.setQueryData<GetManagedRestaurantResponse>(
-          [`managed-restaurant`],
-          {
-            ...cashed,
-            name,
-            description,
-          },
-        );
+    onMutate({ name, description }) {
+      const { cached } = updateManagedRestaurantCache({ name, description });
+
+      return { previusProfile: cached };
+    },
+    onError(_, __, context) {
+      if (context?.previusProfile) {
+        updateManagedRestaurantCache(context.previusProfile);
       }
     },
   });
