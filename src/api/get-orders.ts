@@ -15,6 +15,7 @@ export interface GetOrdersResponse {
   meta: {
     pageIndex: number;
     perPage: number;
+    totalCount: number;
   };
 }
 
