@@ -4,7 +4,17 @@ import { TableCell, TableRow } from "@/components/ui/table";
 import { ArrowRight, Search, X } from "lucide-react";
 import { OrderDetails } from "./order-details";
 
-export function OrderTableRow() {
+export interface OrderTableRowProps {
+  order: {
+    orderId: string;
+    createdAt: Date;
+    status: "pending" | "canceled" | "processing" | "delivering" | "delivered";
+    customerName: string;
+    total: number;
+  };
+}
+
+export function OrderTableRow({ order }: OrderTableRowProps) {
   return (
     <TableRow>
       <TableCell>
@@ -13,7 +23,7 @@ export function OrderTableRow() {
           <DialogTrigger asChild>
             <Button variant="outline" size="xs">
               <Search className="h-3 w-3 " />
-              <span className="sr-only">Detalhes do pediudo</span>
+              <span className="sr-only">Detalhes do pedido</span>
             </Button>
           </DialogTrigger>
           <OrderDetails />
