@@ -14,9 +14,11 @@ import {
   TableRow,
 } from "@/components/ui/table";
 
-export interface OrderDetailsProps {}
+export interface OrderDetailsProps {
+  orderId: string;
+}
 
-export function OrderDetails(props: OrderDetailsProps) {
+export function OrderDetails({ orderId }: OrderDetailsProps) {
   return (
     <DialogContent>
       <DialogHeader>
