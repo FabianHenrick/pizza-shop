@@ -7,7 +7,7 @@ export interface getOrderDetailsParams {
 export interface getOrderDetailsResponse {
   order: {
     id: string;
-    createdAt: Date | null;
+    createdAt: string | null;
     status: "pending" | "canceled" | "processing" | "delivering" | "delivered";
     totalInCents: number;
     customer: {
@@ -16,12 +16,10 @@ export interface getOrderDetailsResponse {
       phone: string | null;
     };
     orderItems: {
-      columns: {
-        id: string;
-        priceInCents: number;
-        quantity: number;
-      }[];
-    };
+      id: string;
+      priceInCents: number;
+      quantity: number;
+    }[];
   };
 }
 
