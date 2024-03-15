@@ -5,22 +5,23 @@ export interface getOrderDetailsParams {
 }
 
 export interface getOrderDetailsResponse {
-  order: {
-    id: string;
-    createdAt: string | null;
-    status: "pending" | "canceled" | "processing" | "delivering" | "delivered";
-    totalInCents: number;
-    customer: {
-      name: string;
-      email: string;
-      phone: string | null;
-    };
-    orderItems: {
-      id: string;
-      priceInCents: number;
-      quantity: number;
-    }[];
+  id: string;
+  createdAt: string;
+  status: "pending" | "canceled" | "processing" | "delivering" | "delivered";
+  totalInCents: number;
+  customer: {
+    name: string;
+    email: string;
+    phone: string | null;
   };
+  orderItems: {
+    id: string;
+    priceInCents: number;
+    quantity: number;
+    product: {
+      name: string;
+    };
+  }[];
 }
 
 export async function getOrderDetails({ orderId }: getOrderDetailsParams) {
